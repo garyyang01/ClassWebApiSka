@@ -28,6 +28,17 @@ namespace ClassicWebAPI.Controllers
         {
             return new JsonResult(await _countryService.GetAll());
         }
+        [HttpGet]
+        public async Task<IActionResult> Map(string country)
+        {
+            var mapUrl = await _countryService.GetMapByCountryName(country);
+            if (mapUrl == null)
+            {
+                return Ok("Country Not Found");
+            }
+
+            return Redirect(mapUrl);
+        }
 
     }
 }

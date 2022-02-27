@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ClassicWebAPI.Models;
@@ -7,9 +8,9 @@ using Newtonsoft.Json;
 
 namespace ClassicWebAPI.Services
 {
-    class CountryService : ICountryService
+    public class CountryService : ICountryService
     {
-        private IHttpClientService _httpClientService;
+        private readonly IHttpClientService _httpClientService;
 
         public CountryService(IHttpClientService httpClientService)
         {
@@ -23,6 +24,15 @@ namespace ClassicWebAPI.Services
             if (!httpResponseMessage.IsSuccessStatusCode) return null;
             var data = await httpResponseMessage.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IEnumerable<CountryInfo>>(data);
+        }
+
+        public async Task<string> GetMapByCountryName(string countryName)
+        {
+            var httpResponseMessage = await _httpClientService.GetAsync($"https://restcountries.com/v3.1/name/{countryName}");
+            if (!httpResponseMessage.IsSuccessStatusCode) return null;
+            var result= await httpResponseMessage.Content.ReadAsStringAsync();
+            var countryInfos = JsonConvert.DeserializeObject<IEnumerable<CountryInfo>>(result);
+            return countryInfos?.FirstOrDefault()?.Map.GoogleMap;
         }
     }
 

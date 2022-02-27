@@ -34,6 +34,15 @@ namespace ClassicWebAPI.Services
             var countryInfos = JsonConvert.DeserializeObject<IEnumerable<CountryInfo>>(result);
             return countryInfos?.FirstOrDefault()?.Map.GoogleMap;
         }
+
+        public async Task<List<string>> GetCountryBySubRegion(string subRegion)
+        {
+            var httpResponseMessage = await _httpClientService.GetAsync($"https://restcountries.com/v3.1/subregion/{subRegion}");
+            if (!httpResponseMessage.IsSuccessStatusCode) return null;
+            var result = await httpResponseMessage.Content.ReadAsStringAsync();
+            var countryInfos = JsonConvert.DeserializeObject<IEnumerable<CountryInfo>>(result);
+            return countryInfos?.Select(x => x.CountryName.Common).ToList();
+        }
     }
 
     public interface IHttpClientService

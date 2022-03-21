@@ -33,7 +33,7 @@ namespace ClassicWebAPI.Services
             return countryInfos?.FirstOrDefault()?.Map.GoogleMap;
         }
 
-        public async Task<List<string>> GetCountryBySubRegion(string subRegion)
+        public async Task<List<string>> GetCountryNamesBySubRegion(string subRegion)
         {
             var httpResponseMessage = await _httpClientService.GetAsync($"https://restcountries.com/v3.1/subregion/{subRegion}");
             if (!httpResponseMessage.IsSuccessStatusCode) return null;

@@ -42,7 +42,7 @@ namespace ClassicWebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> GetCountryBySubRegion([FromBody] GetCountryBySubRegionRequest request)
         {
-            var countriesNames = await _countryService.GetCountryBySubRegion(request.SubRegion);
+            var countriesNames = await _countryService.GetCountryNamesBySubRegion(request.SubRegion);
             if (countriesNames == null)
             {
                 return Ok("Country Not Found");
